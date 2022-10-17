@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Subdomain Takeover by: s0x6fup</title>
+  </head>
+  <body>
+    <%- include('./partials/nav.ejs'); %> 
+     <h1>s0x6fup</h1><br>
+     <h2>Security Researcher</h2>
+    <% if (posts.length > 0) {%>
+      <ul>
+        <% posts.forEach(post => { // a for loop%>
+            <li><a href="/post/<%= post._id %> "><%= post.heading %></a></li>
+        <% }); %>
+        </ul>
+    <% } %>
+  </body>
+</html>

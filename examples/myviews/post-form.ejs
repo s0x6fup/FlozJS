@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <title>create post</title>
+  </head>
+  <body>
+    <%- include('./partials/nav.ejs'); %>
+    <form action="/post" method="post">
+      <label for="postHeading">Heading:</label><br>
+      <input type="text" id="postHeading" name="heading"><br>
+      <label for="postText">Text:</label><br>
+      <textarea id="postText" name="text" rows="4" cols="50"></textarea><br>
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>

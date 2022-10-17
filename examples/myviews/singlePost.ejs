@@ -1,0 +1,30 @@
+<html>
+  <head>
+    <title>post</title>
+  </head>
+  <body>
+    <%- include('./partials/nav.ejs'); %> 
+    <h1>s0x6fup</h1><br>
+    <h2>Security Researcher</h2>
+    <h3><%= post.heading %> </h3>
+    <p><%= post.text %> </p>
+    <button id="deleteButton" data-postid="<%= post._id %>">delete</button>
+    
+    <script>
+      const deleteButton = document.getElementById('deleteButton');
+      
+      deleteButton.addEventListener('click', (e) => {
+        const endpoint = `/post/${deleteButton.dataset.postid}`;
+
+        fetch(endpoint, {
+          method: 'DELETE'
+        })
+        .then((res) => res.json()) // catching JSON response and parsing it as json
+        .then((data) => window.location = data.redirect) // redirecting via redirect JSON key
+        .catch((err) => {
+          console.log(err);
+        });
+      });
+    </script>
+  </body>
+</html>
