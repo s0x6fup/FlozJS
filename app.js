@@ -36,6 +36,7 @@ app.use(session({
 const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
 const commentRoutes = require('./routes/comment');
+const contactRoutes = require('./routes/contact');
 
 
 // request handling
@@ -45,29 +46,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/post', postRoutes);
 app.use('/comment', commentRoutes);
+app.use('/contact', contactRoutes);
 app.use(userRoutes);
 
 app.get('/', (req, res) => {
     res.redirect('/post');
 });
-
-// app.post('/test', (req, res) => {
-//     // let user = JSON.parse(req.body);
-//     let user = req.body
-//     console.log(user);
-//     console.log(user.sneaked);
-//     let baseTest = { picture: '/tmp/test.png' };
-//     let newTest = Object.assign( baseTest, user);
-//     console.log(newTest.sneaked);
-//     // console.log(newTest)
-//     res.render('test');
-// });
-
-// app.get('/test', (req, res) => {
-//     let test = req.query;
-//     console.log(test)
-//     res.render('test');
-// });
 
 app.use(express.static('public'));
 

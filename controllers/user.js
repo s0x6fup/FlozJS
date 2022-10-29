@@ -123,7 +123,11 @@ function logout(req, res) {
 
 function profile(req, res) {
     if ( typeof req.session == 'object' && req.session.userId ) {
-        res.render('profile', { heading: req.session.username + '\'s', subheading: 'profile' });
+        res.render('profile', {
+            heading: req.session.username + '\'s',
+            subheading: 'profile',
+            session: req.session
+        });
     } else {
         res.redirect('/');
     }

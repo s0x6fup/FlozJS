@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head'); %>
+<body>
+<%- include('./partials/navigation'); %>
+<%- include('./partials/pageHeader'); %>
+
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <h3>Comments</h3>
+                <div id="messageSection">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>
+<%- include('./partials/importedScripts'); %>
+
+<script>
+    const messageSection = document.getElementById('messageSection');
+    const addons = {
+        status: 'pending',
+        date: 'DD/MM/YYYY'
+    }
+
+    function encodeHTMLEntities(rawStr) {
+        return rawStr.replace(/[\u00A0-\u9999<>\&]/g, ((i) => `&#${i.charCodeAt(0)};`));
+    }
+
+    function loadMessage(message) {
+        console.log(message);
+        let messageNode = document.createElement("p");
+        let emailNode = document.createElement('div');
+        let messageTextNode = document.createElement('div');
+        let statusNode = document.createElement('div');
+        let dateNode = document.createElement('div');
+
+        messageWrapped = Object.assign({}, message, addons);
+
+        emailNode.innerHTML = messageWrapped.email;
+        emailNode.classList.add('fw-bold');
+        messageTextNode.innerHTML = messageWrapped.message;
+        statusNode.innerHTML = messageWrapped.status;
+        dateNode.innerHTML = messageWrapped.date;
+        dateNode.classList.add('fst-italic');
+
+        messageNode.appendChild(emailNode);
+        messageNode.appendChild(statusNode);
+        messageNode.appendChild(messageTextNode);
+        messageNode.appendChild(dateNode);
+        messageSection.appendChild(messageNode);
+    }
+
+    function getMessages() {
+        fetch('/contact/messageList')
+        .then((res) => res.json())
+        .then((data) => {
+            data.forEach((message) => loadMessage(message));
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    window.onload = getMessages();
+</script>
+
+</body>
+</html>
