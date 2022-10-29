@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head'); %>
+<body>
+<%- include('./partials/navigation'); %>
+<%- include('./partials/pageHeader'); %>
+
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <p><%= post.content %> </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <h3>Comments</h3>
+                <div id="commentSection">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% if (typeof session == 'object' && session.userId ) {%>
+<div class="container px-4 px-lg-5">
+    <div class="row gx-4 gx-lg-5 justify-content-center">
+        <div class="col-md-10 col-lg-8 col-xl-7">
+            <div class="my-5">
+                <form id="commentForm" action="/comment/<%= post._id %>" method="post">
+                    <div class="form-floating">
+                        <input type="hidden" name="author" value="<%= session.username %>"/>
+                        <textarea class="form-control" name="comment" placeholder="Enter your comment here..." style="height: 12rem"></textarea>
+                        <label for="message">Leave a comment</label>
+                        <br/>
+                        <input class="btn btn-primary text-uppercase" type="submit" value="Submit"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% } %> 
+
+<%- include('./partials/footer'); %>
+<%- include('./partials/importedScripts'); %>
+
+<script>
+    const commentSection = document.getElementById('commentSection');
+    const postId = '<%= post._id %>';
+    const addons = {
+        avatar: '/assets/img/avatar.png',
+        date: 'DD/MM/YYYY'
+    }
+
+    function encodeHTMLEntities(rawStr) {
+        return rawStr.replace(/[\u00A0-\u9999<>\&]/g, ((i) => `&#${i.charCodeAt(0)};`));
+    }
+
+    function loadComment(comment) {
+        let commentNode = document.createElement("p");
+        let authorNode = document.createElement('div');
+        let commentTextNode = document.createElement('div');
+        let avatarNode = document.createElement('img');
+        let dateNode = document.createElement('div');
+
+        if ( comment.author ) {
+            comment.author = encodeHTMLEntities(comment.author);
+        }
+
+        if ( comment.comment ) {
+            comment.comment = encodeHTMLEntities(comment.comment);
+        }
+
+        commentWrapped = Object.assign({}, comment, addons);
+
+        authorNode.innerHTML = commentWrapped.author;
+        authorNode.classList.add('fw-bold');
+        commentTextNode.innerHTML = commentWrapped.comment;
+        avatarNode.src = commentWrapped.avatar;
+        avatarNode.width = '50';
+        dateNode.innerHTML = commentWrapped.date;
+        dateNode.classList.add('fst-italic');
+
+        commentNode.appendChild(avatarNode);
+        commentNode.appendChild(authorNode);
+        commentNode.appendChild(commentTextNode);
+        commentNode.appendChild(dateNode);
+        commentSection.appendChild(commentNode);
+    }
+
+    function getComments() {
+        fetch('/comment/' + postId)
+        .then((res) => res.json())
+        .then((data) => {
+            data.forEach((comment) => loadComment(comment));
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    window.onload = getComments();
+</script>
+
+</body>
+</html>

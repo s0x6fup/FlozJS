@@ -1,0 +1,13 @@
+version: "3"
+services:
+  database:
+    image: mongo
+    container_name: flozjs-mongodb
+    environment:
+        - MONGO_INITDB_DATABASE=myapp
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=asdfasdfasdf
+    ports:
+      - 127.0.0.1:27017:27017
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
