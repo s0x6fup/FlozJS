@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head'); %>
+<body>
+<%- include('./partials/navigation'); %>
+<%- include('./partials/pageHeader'); %>
+
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div>
+                <% if ( user._id ) { %> 
+                    <p>
+                        <div>Email: <%= user.username %></div>
+                        <div>Username: <%= user.email %></div>
+                    </p>
+                <% } %>
+                    <form action="/manage/deleteUser" method="post">
+                    <% if ( user._id ) { %> 
+                        <input name="userId" type="hidden" value="<%= user._id %>"/>
+                        <input name="confirm" type="hidden" value="true"/>
+                    <% } %> 
+                        <a class="btn btn-primary text-uppercase" href="/manage">Nope! Take me back</a>
+                        <input class="btn btn-primary text-uppercase bg-red" id="submitButton" type="submit" value="Delete user"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>
+<%- include('./partials/importedScripts'); %>
+
+</body>
+</html>

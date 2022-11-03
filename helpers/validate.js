@@ -40,13 +40,42 @@ const contactCheck = [
     body('email').isEmail().withMessage('email is invalid'),
 
     // message
-    body('message').exists().withMessage('message missing'),
-    body('message').not().isEmpty().withMessage('message can\'t be empty'),
+    // body('message').exists().withMessage('message missing'),
+    // body('message').not().isEmpty().withMessage('message can\'t be empty'),
 ]
 
 
 const commentCheck = [
     // TODO
+]
+
+
+const roleUpdateCheck = [
+    // userId
+    body('userId').exists().withMessage('userId missing'),
+    body('userId').not().isEmpty().withMessage('userId can\'t be empty'),
+
+    // role
+    body('role').exists().withMessage('role missing'),
+    body('role').not().isEmpty().withMessage('role can\'t be empty')
+]
+
+
+const deleteUserConfirmCheck = [
+    // userId
+    body('userId').exists().withMessage('userId missing'),
+    body('userId').not().isEmpty().withMessage('userId can\'t be empty')
+]
+
+
+const deleteUserCheck = [
+    // userId
+    body('userId').exists().withMessage('userId missing'),
+    body('userId').not().isEmpty().withMessage('userId can\'t be empty'),
+
+    // confirm
+    body('confirm').exists().withMessage('confirm missing'),
+    body('confirm').not().isEmpty().withMessage('confirm can\'t be empty')
 ]
 
 
@@ -64,5 +93,8 @@ module.exports = {
     registerCheck,
     loginCheck,
     contactCheck,
+    roleUpdateCheck,
+    deleteUserConfirmCheck,
+    deleteUserCheck,
     hasSpecialChars
 }

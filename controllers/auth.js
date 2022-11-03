@@ -1,5 +1,8 @@
 const User = require('../models/user');
-const { validationResult } = require('express-validator')
+const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+const { get } = require('mongoose');
+const { debugMessage } = require('../helpers/debug')
 
 
 const registerPageHeader = {
@@ -99,8 +102,7 @@ function register(req, res) {
 
             user.save()
             .then((result) => {
-                console.log(result);
-                res.redirect('/login');
+                res.redirect('/auth/login');
             })
             .catch((err) => {
                 flashPageHeader.flash = 'an error occured while registering! If this issue proceeds, please contact our staff'

@@ -23,7 +23,6 @@ const userSchema = new Schema({
 
 // had to change "=>" (ES6 arrow) to "function" so the semantics of "this" that is handled internally by mongoose
 userSchema.methods.setPassword = function(password) {
-    console.log(this);
     this.salt = crypto.randomBytes(16).toString('hex');
 
     this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, `sha512`).toString(`hex`);

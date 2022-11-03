@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./partials/head'); %>
+<body>
+<%- include('./partials/navigation'); %>
+<%- include('./partials/pageHeader'); %>
+
+<div class="mb-4">
+    <div class="container px-4 px-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-7">
+                <div>
+                    <P>Update a user's role</P>
+                    <form action="/manage/role" method="post">
+                        <div class="form-group">
+                            <label for="user">User</label>
+                            <select class="form-select" id="userId" name="userId">
+                                <option selected>Choose user</option>
+                                <% users.forEach((user) => { %> 
+                                    <option value="<%= user._id %>"><%= user.username %></option>
+                                <% }); %> 
+                            </select>
+                        </div>
+                        <br/>
+                        <div class="form-group">
+                            <label for="role">Role</label>
+                            <select class="form-select" id="role" name="role">
+                                <option selected>Choose role</option>
+                                <% roles.forEach((role) => { %> 
+                                    <option value="<%= role %>"><%= role %></option>
+                                <% }); %> 
+                            </select>
+                        </div>
+                        <br/>
+                        <input class="btn btn-primary text-uppercase " id="submitButton" type="submit" value="Update role"/>
+                    </form>
+                </div>
+                <br/>
+                <% if ( session.role === 'Administrator' ) { %>
+                <div>
+                    <p>Delete a user</p>
+                    <form action="/manage/deleteUserConfirm" method="post">
+                        <div class="form-group">
+                            <label for="user">User</label>
+                            <select class="form-select" id="userId" name="userId">
+                                <option selected>Choose user</option>
+                                <% users.forEach((user) => { %> 
+                                    <option value="<%= user._id %>"><%= user.username %></option>
+                                <% }); %> 
+                            </select>
+                        </div>
+                        <br/>
+                        <input class="btn btn-primary text-uppercase " id="submitButton" type="submit" value="Delete user"/>
+                    </form>
+                </div>
+                <% } %> 
+                <br/>
+                <div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th scope="col">Email</th>
+                                <th scope="col">Username</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <% users.forEach((user) => { %>
+                            <tr>
+                                <td><%= user.email %></td>
+                                <td><%= user.username %></td>
+                                <td><%= user.role %></td>
+                            </tr>
+                        <% }); %> 
+                        </tbody>
+                      </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>
+<%- include('./partials/importedScripts'); %>
+
+</body>
+</html>

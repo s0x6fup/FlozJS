@@ -10,22 +10,20 @@
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
                 <div class="my-5">
-                    <form action="/login" method="post">
+                    <form action="/auth/login" method="post">
                         <div class="form-floating">
-                            <input class="form-control" id="email" type="email" placeholder="Enter your email..." 
-                            name="email" />
+                            <input class="form-control" id="email" type="email" placeholder="Enter your email..." name="email" />
                             <label for="email">Email address</label>
                         </div>
                         <div class="form-floating">
-                            <input class="form-control" id="password" type="password" placeholder="Password"
-                            name="password" />
+                            <input class="form-control" id="password" type="password" placeholder="Password" name="password"/>
                             <label for="password">Password</label>
                         </div>
-                        <br />
+                        <br/>
                         <input class="btn btn-primary text-uppercase " id="submitButton" type="submit" value="Login"/>
                     </form>
                     <p><a href="#">Forgot password</a></p>
-                    <p><a href="/register">Register</a></p>
+                    <p><a href="/auth/register">Register</a></p>
                 </div>
             </div>
         </div>

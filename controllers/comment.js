@@ -40,7 +40,7 @@ function commentsByPostId(req, res) {
         result.forEach(cmnt => {
             comments.push(JSON.parse(cmnt.data));
         });
-        console.log(comments);
+
         res.status(200).send(comments);
     })
     .catch((err) => {
