@@ -4,8 +4,10 @@ This file is not intended for the code analysis challenge
 
 */
 const puppeteer = require('puppeteer');
-const Post = require('../models/post');
 const User = require('../models/user');
+const Post = require('../models/post');
+const Comment = require('../models/comment');
+const Contact = require('../models/contact');
 
 
 const dummyPosts = [
@@ -47,112 +49,124 @@ const dummyPosts = [
     }
 ]
 
+
 const dummyUsers = [
     {
-        username: 'user',
-        email: 'user@floz.com',
-        password: 'test',
+        username: 'bart',
+        email: 'bart@floz.com',
         role: 'User'
     },
     {
-        username: 'staff',
-        email: 'staff@floz.com',
-        password: 'test',
+        username: 'dorris',
+        email: 'dorris@floz.com',
         role: 'Staff'
     },
     {
-        username: 'administrator',
+        username: 'admin',
         email: 'admin@floz.com',
-        password: 'test',
         role: 'Administrator'
     },
 ]
 
 
-function createPosts() {
-    dummyPosts.forEach( dummyPost => {
-        let post = new Post(dummyPost);
+async function createPosts() {
+    let posts = dummyPosts;
+
+    posts.forEach( postObj => {
+        let post = new Post(postObj);
 
         post.save()
         .catch((err) => {
             console.log(err);
         });
     });
+
+    return;
 }
 
-function checkPosts() {
-    Post.find()
-    .then((result) => {
-        if (result.length > 0) { 
-            console.log('posts are already populated');
-        }
 
-        if (result.length == 0) { 
-            console.log('populating posts');
-            createPosts();
-        }
-    })
-    .catch((err) => {
-        console.log(err)
+function generatePassword() {
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let length = 20;
+    let result = '';
+    let charactersLength = characters.length;
+
+    for ( let i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+}
+
+async function deleteCollections() {
+    await User.deleteMany({});
+    await Post.deleteMany({});
+    await Comment.deleteMany({});
+    await Contact.deleteMany({});
+
+    return;
+}
+
+
+async function createUsers() {
+    let users = dummyUsers;
+
+    // generate passwords
+    users.forEach((userObj) => {
+        userObj.password = generatePassword();
     });
-}
 
-
-function createUsers() {
-    dummyUsers.forEach( dummyUser => {
+    // create users
+    users.forEach((userObj) => {
         let user = new User({
-            username: dummyUser.username,
-            email: dummyUser.email,
-            role: dummyUser.role
+            username: userObj.username,
+            email: userObj.email,
+            role: userObj.role
         });
 
-        user.setPassword(dummyUser.password);
+        user.setPassword(userObj.password);
 
         user.save()
         .catch((err) => {
             console.log(err);
-        })
+        });
     });
+
+    // return email and password of dorris
+    return users[1];
 }
 
 
-function checkUsers() {
-    User.find()
-    .then((result) => {
-        if (result.length > 0) { 
-            console.log('users are already populated');
-        }
-
-        if (result.length == 0) { 
-            console.log('populating users');
-            createUsers();
-        }
-    })
-    .catch((err) => {
-        console.log(err)
-    });
-}
-
-
-async function victimUser() {
-    const browser = await puppeteer.launch({headless: false, env:{DISPLAY: ":10.0"}});
-    // const browser = await puppeteer.launch({headless: false});
+async function victimUser(user) {
+    const browser = await puppeteer.launch({headless: true});
     const page = await browser.newPage();
     await page.setViewport({width: 1200, height: 720});
+
+    // login
     await page.goto('http://localhost:3000/auth/login', { waitUntil: 'networkidle0' }); 
-    await page.type('#email', 'staff@floz.com');
-    await page.type('#password', 'test');
+    await page.type('#email', user.email);
+    await page.type('#password', user.password);
     await Promise.all([
       page.click('#submitButton'),
       page.waitForNavigation({ waitUntil: 'networkidle0' }),
     ]);
+
+    // go to vulnerable page
+    await page.goto('http://localhost:3000/contact/message', { waitUntil: 'networkidle0' });
+
+    // wait there a few seconds
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    // close browser
+    await browser.close();
 }
 
 
-function startLab() {
-    checkPosts();
-    checkUsers();
-    victimUser();
+async function startLab() {
+    await deleteCollections();
+    let user = await createUsers();
+    await createPosts();
+    setInterval(() => victimUser(user), 30000);
 }
 
 

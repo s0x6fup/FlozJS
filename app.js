@@ -42,7 +42,7 @@ const commentRoutes = require('./routes/comment');
 const contactRoutes = require('./routes/contact'); 
 
 // request handling
-app.use(morgan('dev'));
+app.use(morgan('common'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(debugHeader);

@@ -11,36 +11,38 @@ const registerPageHeader = {
 }
 
 
-const loginPageHeader = {
-    heading: 'Login',
-    subheading: 'Welcome back'
-}
-
-
 function login_form(req, res) {
     if ( typeof req.session == 'object' && req.session.userId ) {
         res.redirect('/')
     } else {
-        res.render('loginForm', loginPageHeader);
+        res.render('loginForm', {
+            heading: 'Login',
+            subheading: 'Welcome back'
+        });
     }
 }
 
 
 function login(req, res) {
     let errors = validationResult(req).array();
-    let flashPageHeader = loginPageHeader;
 
     if (errors.length > 0) {
-        flashPageHeader.flash = errors[0].msg;
-        res.render('loginForm', flashPageHeader);
+        res.render('loginForm', {
+            heading: 'Login',
+            subheading: 'Welcome back',
+            flash: errors[0].msg
+        });
     }
 
     if (errors.length == 0) {
         User.findOne({ email : req.body.email })
         .then((user) => {
             if (user === null) {
-                flashPageHeader.flash = 'username or password are incorrect.';
-                res.render('loginForm', flashPageHeader);
+                res.render('loginForm', {
+                    heading: 'Login',
+                    subheading: 'Welcome back',
+                    flash: 'username or password are incorrect.'
+                });
             }
 
             if (user !== null) {
@@ -53,15 +55,21 @@ function login(req, res) {
                 } 
                 
                 if (!user.validPassword(req.body.password)) {
-                    flashPageHeader.flash = 'username or password are incorrect.';
-                    res.render('loginForm', flashPageHeader);
+                    res.render('loginForm', {
+                        heading: 'Login',
+                        subheading: 'Welcome back',
+                        flash: 'username or password are incorrect.'
+                    });
                 }
             }
         })
         .catch((err) => {
             console.log(err);
-            flashPageHeader.flash = 'an error occured while logging in.'
-            res.render('LoginForm', flashPageHeader);
+            res.render('LoginForm', {
+                heading: 'Login',
+                subheading: 'Welcome back',
+                flash: 'an error occured while logging in.'
+            });
         });
     }
 }
@@ -78,17 +86,22 @@ function register_form(req, res) {
 
 function register(req, res) {
     let errors = validationResult(req).array();
-    let flashPageHeader = registerPageHeader;
 
     if (errors.length > 0) {
-        flashPageHeader.flash = errors[0].msg;
-        res.render('registerForm', flashPageHeader);
+        res.render('registerForm', {
+            heading: 'Register',
+            subheading: 'Welcome to Finance and Loans OrganiZation',
+            flash: errors[0].msg
+        });
     }
 
     if (errors.length == 0) {
         if (req.body.password != req.body.passwordConfirm) {
-            flashPageHeader.flash = 'password mismatch'
-            res.render('registerForm', flashPageHeader);
+            res.render('registerForm', {
+                heading: 'Register',
+                subheading: 'Welcome to Finance and Loans OrganiZation',
+                flash: 'password mismatch'
+            });
         }
 
         if (req.body.password == req.body.passwordConfirm) {
@@ -105,9 +118,11 @@ function register(req, res) {
                 res.redirect('/auth/login');
             })
             .catch((err) => {
-                flashPageHeader.flash = 'an error occured while registering! If this issue proceeds, please contact our staff'
-                console.log(err);
-                res.render('registerForm', flashPageHeader);
+                res.render('registerForm', {
+                    heading: 'Register',
+                    subheading: 'Welcome to Finance and Loans OrganiZation',
+                    flash: 'could not register'
+                });
             })
         }
     }
