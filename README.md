@@ -1,5 +1,11 @@
 # FlozJS (Finance and Loans OrganiZation)
-Project created to learn NodeJS and NodeJS vulnerabilities
+Welcome to my project!
+This is a vulnerable web applicaiton I created while studying NodeJS.
+THe intended path to solve this lab is with a black box apprach, meaning you don't need to look at the code in order to solve it.
+However, you can still look at the code if you want to practice code analysis.
+If you get stuck I provided hints within the "hints" folder.
+
+Have fun! :)
 
 # Lab setup
 install dependecies
@@ -9,12 +15,12 @@ npm install
 
 Start MongoDB database
 ```bash
-sudo docker-compose -f docker-compose.yml up -d
+sudo docker-compose -f config/docker-compose.yml up -d
 ```
 
-Populate database
+Start / Restart lab
 ```bash
-node lab/lab.js
+node app.js
 ```
 
 
