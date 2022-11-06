@@ -1,7 +1,7 @@
 const User = require('../models/user');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
-
+const { hasSpecialCharsDev } = require('../helpers/validate');
 
 const roles = [
     'User',
@@ -118,6 +118,12 @@ function deleteUserConfirm(req, res) {
 function deleteUser(req, res) {
     let errors = validationResult(req).array();
     let userId = req.body.userId;
+
+    // filtering characters that might cause an injection
+    if ( hasSpecialCharsDev(req.body.confirm) ) {
+        return res.status(400).send('');
+    }
+
     let confirm = eval(req.body.confirm); // we want true to be received as boolean and not as string
 
     if ( req.session.role !== 'Administrator' ) {
@@ -135,8 +141,6 @@ function deleteUser(req, res) {
     if ( !confirm ) {
         return res.redirect('/manage');
     }
-
-    console.log('passed test')
 
     User.findOne({ _id: userId })
     .then((result) => {

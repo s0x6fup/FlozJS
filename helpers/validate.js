@@ -79,6 +79,16 @@ const deleteUserCheck = [
 ]
 
 
+function hasSpecialCharsDev(str) {
+    let specialChars = /[!@#$%^&*_+\-=\[\]{};:\\|<>?]+/;
+    if(specialChars.test(str)){
+      return true;
+    }
+
+    return false;
+}
+
+// i came up with a better filter, it filters additional characters that we didn't want
 function hasSpecialChars(str) {
     let specialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|<>\/?]+/;
     if(specialChars.test(str)){
@@ -96,5 +106,6 @@ module.exports = {
     roleUpdateCheck,
     deleteUserConfirmCheck,
     deleteUserCheck,
-    hasSpecialChars
+    hasSpecialChars,
+    hasSpecialCharsDev
 }
